@@ -15,11 +15,12 @@ What needs to be done:
 Quick Start
 ==
 
-1. Install [Django 1.6](https://docs.djangoproject.com/en/dev/releases/1.6/)
-2. `git clone http://github.com/MisterAbc/bc2
-3. `python manage.py syncdb`
-4. Ask zl4ry@virginia.edu for a brown college roster, save it in the same directory, call it `roster.csv`
-5. `python manage.py update_roster roster.csv`
-6. `python manage.py runserver`
-7. Go to [localhost:8000](localhost:8000)
-8. There's something about making an admin account, use Django documentation to learn more!
+1. Install [privateviews](https://github.com/dabapps/django-private-views)
+2. Install [Django 1.6](https://docs.djangoproject.com/en/dev/releases/1.6/)
+3. `git clone http://github.com/MisterAbc/bc2
+4. `python manage.py syncdb`
+5. Ask zl4ry@virginia.edu for a brown college roster, save it in the same directory, call it `roster.csv`
+6. `python manage.py update_roster roster.csv`
+7. `python manage.py runserver`
+8. Go to [localhost:8000](localhost:8000)
+9. There's something about making an admin account, use Django documentation to learn more!
