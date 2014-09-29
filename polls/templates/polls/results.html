@@ -1,0 +1,17 @@
+{% extends "base/base.html" %}
+
+{% block title %} Results - {{ poll.question }} {% endblock %}
+
+{% block content %}
+<h1>{{ poll.question }}</h1>
+
+<ul>
+    <table class="table">
+        {% for text, val in map.iteritems %}
+            <tr><td>{{ text }}</td><td>{{ val }}</td></tr>
+        {% endfor %}
+    </table>
+</ul>
+
+<a href="{% url 'polls:detail' poll.id %}">Vote again?</a>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+
+{% block title %} People {% endblock %}
+
+
+{% block css %}
+	{{ block.super }}
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'roster/style.css' %}" />
+    <script src="{% static 'roster/js/sorttable.js' %}"></script>
+{% endblock %}
+
+
+
+{% block content %}
+	{% if roster %}
+	<table class="sortable table table-striped">
+        <thead>
+            <tr><th>First Name</th><th>Last Name</th><th>Net ID</th><th>Portal</th><th>Room</th></tr>
+        </thead>
+        <tbody>
+	    {% for resident in roster %}
+            <tr>
+                <th>{{ resident.user.first_name }}</th>
+                <th>{{ resident.user.last_name }}</th>
+                <th>{{ resident.user.username }}</th>
+                <th>{{ resident.get_portal_display }}</th>
+                <th>{{ resident.room_number }} {{resident.room_subnumber}}</th></tr>
+	    {% endfor %}
+        </tbody>
+	</table>
+	{% else %}
+	<p>No users are available.</p>
+	{% endif %}
+{% endblock content %}

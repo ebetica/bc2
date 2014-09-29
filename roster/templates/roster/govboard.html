@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+
+{% block title %} Govboard {% endblock %}
+
+
+{% block css %}
+	{{ block.super }}
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'roster/style.css' %}" />
+{% endblock %}
+
+
+
+{% block content %}
+	{% if govboard %}
+    <div class="col-md-6">
+        {% for position in govboard %}
+        {% if forloop.counter0 == seplen %}
+            </div><div class="col-md-6">
+        {% endif %}
+        <h3>{{ position.position_name }}</h3>
+        <table class="table">
+            <thead>
+            <tr><th>Name</th><th>Net ID</th></tr>
+            </thead>
+            <tbody>
+            {% for member in position.members %}
+            <tr>
+                <th>{{ member.user.first_name }} {{ member.user.last_name }}</th>
+                <th>{{ member.user.username }}</th>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endfor %}
+    </div>
+	{% else %}
+	<p>No users are available.</p>
+	{% endif %}
+{% endblock content %}
