@@ -52,3 +52,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# PyCharm
+.idea/
+
+# Database file:
+db.sqlite3
+
+# Random data files
+*.cvs

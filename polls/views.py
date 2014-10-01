@@ -34,9 +34,9 @@ class ResultsView(generic.DetailView):
 
 def vote(request, poll_id):
     p = get_object_or_404(Poll, pk=poll_id)
-    if p.type == p.SIMPLE:
+    if p.type in [p.SIMPLE, p.MULTI]:
         try:
-            selected_choice = p.choice_set.get(pk=request.POST['choice'])
+            choice_ids = request.POST.getlist('choice')
         except (KeyError, Choice.DoesNotExist):
             # Redisplay the poll voting form.
             return render(request, 'polls/detail.html', {
@@ -48,13 +48,14 @@ def vote(request, poll_id):
                 voter = Voter.objects.get(user=request.user, poll=p)
             except Voter.DoesNotExist:
                 voter = Voter(poll=p, user=request.user)
-            try:
-                vote = Vote.objects.get(voter=voter)
-            except Vote.DoesNotExist:
+                voter.save()
+            for vote in voter.vote_set.all():
+                vote.delete()
+            for id in choice_ids:
+                choice = p.choice_set.get(pk=id)
                 vote = Vote(voter=voter)
-            voter.save()
-            vote.choice = selected_choice
-            vote.save()
+                vote.choice = choice
+                vote.save()
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
             # user hits the Back button.

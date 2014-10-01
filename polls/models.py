@@ -15,6 +15,7 @@ class Poll(models.Model):
         (RANKED, 'Ranked Choice'),
     )
     type = models.CharField(max_length=1, choices=TYPES)
+    max_choices = models.IntegerField(default=1)
 
     def __unicode__(self):
         return self.question

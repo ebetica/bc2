@@ -7,10 +7,10 @@ class ChoiceInline(admin.TabularInline):
 
 class PollAdmin(admin.ModelAdmin):
     fieldsets = [
-	(None,               {'fields': ['type', 'question']}),
+	(None,               {'fields': ['type', 'question', 'max_choices']}),
 	('Date information', {'fields': ['start_date', 'end_date']}),
     ]
-    list_display = ('question', 'start_date')
+    list_display = ('question', 'start_date', 'end_date')
     inlines = [ChoiceInline]
     list_filter = ['start_date']
     search_fields = ['question']

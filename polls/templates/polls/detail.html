@@ -2,6 +2,20 @@
 
 {% block title %} {{ poll.question }} {% endblock %}
 
+{% block js %}
+<script>
+    jQuery(function(){
+    var max = {{ poll.max_choices }};
+    var checkboxes = $('input[type="checkbox"]');
+
+    checkboxes.change(function(){
+        var current = checkboxes.filter(':checked').length;
+        checkboxes.filter(':not(:checked)').prop('disabled', current >= max);
+    });
+});
+</script>
+{% endblock %}
+
 {% block content %}
 <h1> {{ poll.question }} </h1>
 
@@ -11,8 +25,17 @@
 <form action="{% url 'polls:vote' poll.id %}" method="post">
 {% csrf_token %}
 {% for choice in poll.choice_set.all %}
-<input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ choice.id }}" />
-    <label for="choice{{ forloop.counter0 }}">{{ choice.choice_text }}</label><br />
+<input type="radio" name="choice" id="choice_single{{ forloop.counter0 }}" value="{{ choice.id }}" />
+    <label for="choice_single{{ forloop.counter0 }}">{{ choice.choice_text }}</label><br />
+{% endfor %}
+<input type="submit" value="Vote" />
+</form>
+{% elif poll.type == 'M' %}
+<form action="{% url 'polls:vote' poll.id %}" method="post">
+{% csrf_token %}
+{% for choice in poll.choice_set.all %}
+<input type="checkbox" name="choice" id="choice_multi{{ forloop.counter0 }}" value="{{ choice.id }}" />
+<label for="choice_multi{{ forloop.counter0 }}">{{ choice.choice_text }}</label><br />
 {% endfor %}
 <input type="submit" value="Vote" />
 </form>
