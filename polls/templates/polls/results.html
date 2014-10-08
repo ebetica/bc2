@@ -5,13 +5,21 @@
 {% block content %}
 <h1>{{ poll.question }}</h1>
 
-<ul>
-    <table class="table">
-        {% for text, val in map.iteritems %}
-            <tr><td>{{ text }}</td><td>{{ val }}</td></tr>
-        {% endfor %}
-    </table>
-</ul>
+<table class="table">
+    <thead>
+    {% if poll.type == 'S' or poll.type == 'M' %}
+        <tr><td>Rank</td><td>Name</td><td>Votes</td></tr>
+    {% elif poll.type == 'R' %}
+        <tr><td>Rank</td><td>Name</td><td>Votes (in order of preference)</td></tr>
+    {% endif%}
+    </thead>
+    <tbody>
+    {% for text, val in map %}
+        <tr><td>{{ forloop.counter }}</td><td>{{ text }}</td><td>{{ val }}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div>Turnout: {{ total }}</div>
 
 <a href="{% url 'polls:detail' poll.id %}">Vote again?</a>
 {% endblock content %}

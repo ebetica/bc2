@@ -2,45 +2,71 @@
 
 {% block title %} {{ poll.question }} {% endblock %}
 
-{% block js %}
-<script>
-    jQuery(function(){
-    var max = {{ poll.max_choices }};
-    var checkboxes = $('input[type="checkbox"]');
+{% block css %}
+        {{ block.super }}
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'polls/css/style.css' %}">
+{% endblock %}
 
-    checkboxes.change(function(){
-        var current = checkboxes.filter(':checked').length;
-        checkboxes.filter(':not(:checked)').prop('disabled', current >= max);
-    });
-});
-</script>
+{% block js %}
+    {{ block.super }}
+    {% load staticfiles %}
+    <script src="{% static 'polls/js/jquery-sortable-min.js' %}"></script>
+    <script>
+        jQuery(function(){
+            var max = {{ poll.max_choices }};
+            var checkboxes = $('input[type="checkbox"]');
+
+            checkboxes.change(function(){
+                var current = checkboxes.filter(':checked').length;
+                checkboxes.filter(':not(:checked)').prop('disabled', current >= max);
+            });
+            $(function  () {
+                $("ol.draggable").sortable()
+            });
+
+            $('#ranked_choice').submit(function(){ //listen for submit event
+                var res =
+                    $('#draggable li').map(function(i,e){return $(e).attr('val');})
+                            .get().join(",");
+                $('<input />').attr('type', 'hidden')
+                        .attr('name', "rank")
+                        .attr('value', res)
+                        .appendTo('#ranked_choice');
+
+                return true;
+            });
+        });
+
+    </script>
 {% endblock %}
 
 {% block content %}
-<h1> {{ poll.question }} </h1>
+<h1 id="tester"> {{ poll.question }} </h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-{% if poll.type == 'S' %}
-<form action="{% url 'polls:vote' poll.id %}" method="post">
-{% csrf_token %}
-{% for choice in poll.choice_set.all %}
-<input type="radio" name="choice" id="choice_single{{ forloop.counter0 }}" value="{{ choice.id }}" />
+{% if poll.type == 'S' or poll.type == 'M' %}
+    <form action="{% url 'polls:vote' poll.id %}" method="post">
+    {% csrf_token %}
+    {% for choice in poll.choice_set.all %}
+    <input type="radio" name="choice" id="choice_single{{ forloop.counter0 }}" value="{{ choice.id }}" />
     <label for="choice_single{{ forloop.counter0 }}">{{ choice.choice_text }}</label><br />
-{% endfor %}
-<input type="submit" value="Vote" />
-</form>
-{% elif poll.type == 'M' %}
-<form action="{% url 'polls:vote' poll.id %}" method="post">
-{% csrf_token %}
-{% for choice in poll.choice_set.all %}
-<input type="checkbox" name="choice" id="choice_multi{{ forloop.counter0 }}" value="{{ choice.id }}" />
-<label for="choice_multi{{ forloop.counter0 }}">{{ choice.choice_text }}</label><br />
-{% endfor %}
-<input type="submit" value="Vote" />
-</form>
-{% else %}
-        Non-simple polls not implemented :(
+    {% endfor %}
+    <input type="submit" value="Vote" />
+    </form>
+{% elif poll.type == 'R' %}
+    <form id="ranked_choice" action="{% url 'polls:vote' poll.id %}" method="post">
+    {% csrf_token %}
+    <ol class="draggable" id="draggable">
+    {% for choice in poll.choice_set.all %}
+        <li class="draggable" val="{{ choice.id }}">{{ choice.choice_text }}</li>
+    {% endfor %}
+    </ol>
+    <input type="submit" value="Vote" />
+    </form>
 {% endif%}
+
+
 
 {% endblock content %}

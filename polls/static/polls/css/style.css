@@ -1,0 +1,46 @@
+li.draggable a {
+    color: green;
+}
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  top: 0;
+  opacity: .5;
+  z-index: 2000;
+}
+
+ol.vertical {
+  margin: 0 0 9px 0;
+  min-height: 10px;
+}
+
+li.draggable {
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid #CCC;
+  color: darkblue;
+  background: lightgray;
+}
+
+li.placeholder {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+li.placeholder:before {
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+  left: -5px;
+  top: -4px;
+  border: 5px solid transparent;
+  border-left-color: red;
+  border-right: none;
+}
