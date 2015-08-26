@@ -1,6 +1,8 @@
 bc2
 ===
 
+### REPOSITORY IS DEAD :(
+
 What's done:
 - Rosters and Govboard
 - Half of polls
